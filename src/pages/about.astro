@@ -1,0 +1,182 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="A bit about who I am — lektor, former space technologist, occasional tinkerer."
+>
+  <div class="max-w-2xl mx-auto">
+
+    <!-- Page heading -->
+    <div class="mb-12">
+      <h1 class="text-4xl font-bold mb-3" style="color: var(--color-text)">About</h1>
+      <p class="text-lg" style="color: var(--color-muted)">
+        <!--
+          TODO: One-liner intro. Keep it plain.
+          Example: "Teacher. Reader. Reluctant gardener-adjacent."
+        -->
+        Teacher. Reader. Reluctant gardener-adjacent.
+      </p>
+    </div>
+
+    <!-- Avatar placeholder -->
+    <div class="mb-10">
+      <!--
+        TODO: Replace with your own photo.
+        Drop a photo at /public/avatar.jpg and uncomment the <img> below.
+      -->
+      <img
+        src="/avatar.jpg"
+        alt="Photo of Sigurd"
+        class="w-28 h-28 rounded-full border-2 object-cover"
+        style="border-color: var(--color-accent)"
+      />
+      <!--
+      <div
+        class="w-24 h-24 rounded-full border-2 flex items-center justify-center text-3xl font-bold"
+        style="border-color: var(--color-accent); color: var(--color-accent); background: var(--color-card)"
+        aria-hidden="true"
+      >
+        S
+      </div>
+      -->
+    </div>
+
+
+    <!-- ── THE STORY ─────────────────────────────────────────────────── -->
+    <section class="prose-section mb-12">
+      <h2 class="text-xl font-semibold mb-4" style="color: var(--color-text)">
+        The story, roughly
+      </h2>
+
+      <div class="space-y-4 text-base leading-relaxed" style="color: var(--color-muted)">
+        <p>
+          <!--
+            TODO: Write your own version here. Suggested tone: matter-of-fact.
+            The details you gave me:
+
+            - Master's in informatics
+            - Former space technologist (worked with this at high-school level)
+            - Now a lektor / teacher
+            - AI enthusiast — uses it daily
+            - Space enthusiast
+            - Reader, loves books
+            - Enjoys "vibe coding" — relaxed tinkering with small projects
+            - Has a wife, kids, and a family garden (but he is not the gardener)
+          -->
+          I have a master’s degree in informatics. I once had a high-school qualification as a romteknolog — not exactly the glamorous astronaut kind, but the kind that involves a lot of data, a reasonable amount of patience, and the occasional satellite. In the end I didn’t chase that path. Instead I chose love, went with my now-wife to university, and studied informatics.
+        </p>
+        <p>
+          Before settling into teaching I worked as a developer in a couple of companies and then spent two years as a game- and blockchain researcher in a small crypto/gaming startup. There I wrote around thirty research papers on tokenomics, blockchains and game economies.
+        </p>
+        <p>
+          While doing that remote job I also completed my pedagogy education and became a father for the first time. It was a hectic couple of years, but somehow it all worked out.
+        </p>
+        <p>
+          Since 2023 I’ve been teaching full-time at junior high on Lovund — math, science and English. It feels just right.
+        </p>
+        <p>
+          Outside of work I read quite a bit, follow space news, and whatever small project has caught my attention lately. We have a garden at home. My wife has the vision and the plans — I get dragged into the building part, and if I’m being honest I usually quite enjoy it too (though I won’t always admit that).
+        </p>
+        <p>
+          I also enjoy living on Lovund with my family and tinkering and building software stuff — with AI making it all a lot more achievable.
+        </p>
+        <p>
+          I use AI tools every day. At work for planning and feedback, at home for the small tinkering projects that would previously have required either more time or more skill than I had. I find the whole thing genuinely interesting in a low-key way — not as a hobby horse, more as a practical reality that is changing what a person with reasonable curiosity can actually get done.
+        </p>
+        <p>
+          I’m also open to occasional side projects — especially simple web pages for companies or other interesting ideas. If you have something in mind, feel free to reach out.
+        </p>
+      </div>
+    </section>
+
+
+    <!-- ── QUICK FACTS ───────────────────────────────────────────────── -->
+    <section class="mb-12">
+      <h2 class="text-xl font-semibold mb-6" style="color: var(--color-text)">
+        Quick facts
+      </h2>
+
+      <dl class="grid sm:grid-cols-2 gap-4">
+        {[
+          { term: 'Role',       def: 'Lektor / Junior high teacher' },
+          { term: 'Education',  def: 'Master\'s in informatics' },
+          { term: 'Background', def: 'Systems Developer, Blockchain Researcher' },
+          { term: 'Location',   def: 'Lovund, Norway' },
+          { term: 'Interests',  def: 'AI, space, books, running, small software projects' },
+          {
+            term: 'Coding style',
+            def: 'Slow, calm, AI-assisted — what I believe they call "vibe coding"',
+          },
+        ].map(({ term, def }) => (
+          <div class="card p-4">
+            <dt class="text-xs uppercase tracking-widest mb-1" style="color: var(--color-accent)">{term}</dt>
+            <dd class="text-sm leading-relaxed" style="color: var(--color-text)">{def}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+
+    <!-- ── WHAT I USE / TOOLS ─────────────────────────────────────────── -->
+    <section class="mb-12">
+      <h2 class="text-xl font-semibold mb-4" style="color: var(--color-text)">
+        Things I work with
+      </h2>
+      <p class="text-sm mb-6" style="color: var(--color-muted)">
+        <!--
+          TODO: Replace or extend this list. Keep the tone understated.
+          "I use X" is fine. "I am proficient in X at an expert level" is not.
+        -->
+        A non-exhaustive and probably already slightly out-of-date list.
+      </p>
+      <div class="flex flex-wrap gap-2">
+        {[
+          'Python',
+          'Django',
+          'TypeScript',
+          'JavaScript',
+          'Astro',
+          'Tailwind CSS',
+          'SQL',
+          'Git',
+          'Linux',
+          'Markdown',
+          'Vercel',
+          'Render',
+          'Supabase',
+          'AI tools (daily)',
+          /* TODO: Add or remove technologies as appropriate */
+        ].map(tech => (
+          <span
+            class="text-sm px-3 py-1.5 rounded-lg border font-mono"
+            style="border-color: var(--color-border); color: var(--color-text); background: var(--color-card)"
+          >
+            {tech}
+          </span>
+        ))}
+      </div>
+    </section>
+
+
+    <!-- ── CONTACT CTA ───────────────────────────────────────────────── -->
+    <section class="pt-8 border-t border-[var(--color-border)]">
+      <p class="text-base mb-4" style="color: var(--color-muted)">
+        <!--
+          TODO: Short, casual contact invite. Or remove this section entirely
+          if the Contact page handles it.
+        -->
+        If you have a question, a comment, or a book recommendation: feel free to get in touch.
+      </p>
+      <a
+        href="/contact"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm transition-all hover:opacity-90"
+        style="background: var(--color-accent); color: #0f172a;"
+      >
+        Contact
+      </a>
+    </section>
+
+  </div>
+</BaseLayout>

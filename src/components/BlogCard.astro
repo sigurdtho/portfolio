@@ -1,0 +1,78 @@
+---
+interface Props {
+  title:       string;
+  description: string;
+  pubDate:     Date;
+  slug:        string;
+  category:    string;
+  tags:        string[];
+}
+
+const { title, description, pubDate, slug, category, tags } = Astro.props;
+
+const formattedDate = pubDate.toLocaleDateString('en-GB', {
+  year:  'numeric',
+  month: 'short',
+  day:   'numeric',
+});
+---
+
+<article class="card p-6 flex flex-col gap-3 group">
+
+  <!-- Category + date -->
+  <div class="flex items-center justify-between gap-2 text-xs text-muted">
+    <span
+      class="uppercase tracking-widest font-medium"
+      style="color: var(--color-accent)"
+    >
+      {category}
+    </span>
+    <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+  </div>
+
+  <!-- Title -->
+  <h2 class="text-lg font-semibold leading-snug group-hover:text-accent transition-colors" style="color: var(--color-text)">
+    <a href={`/blog/${slug}`} class="stretched-link">
+      {title}
+    </a>
+  </h2>
+
+  <!-- Description -->
+  <p class="text-sm leading-relaxed line-clamp-3 flex-1" style="color: var(--color-muted)">
+    {description}
+  </p>
+
+  <!-- Tags -->
+  {tags.length > 0 && (
+    <div class="flex flex-wrap gap-1.5 pt-1">
+      {tags.map(tag => (
+        <span class="text-xs px-2 py-0.5 rounded font-mono" style="background: var(--color-bg); color: var(--color-muted)">
+          #{tag}
+        </span>
+      ))}
+    </div>
+  )}
+
+  <!-- Read more -->
+  <a
+    href={`/blog/${slug}`}
+    class="mt-1 inline-flex items-center gap-1 text-xs font-medium text-accent hover:text-[var(--color-highlight)] transition-colors self-start"
+  >
+    Read more
+    <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+    </svg>
+  </a>
+
+</article>
+
+<style>
+  /* Make the whole card clickable via the title link */
+  article { position: relative; }
+  .stretched-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+</style>

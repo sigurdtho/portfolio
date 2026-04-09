@@ -1,0 +1,68 @@
+---
+import Nav from '@components/Nav.astro';
+import Footer from '@components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title:       string;
+  description?: string;
+  ogImage?:    string;
+}
+
+const {
+  title,
+  description = 'Personal portfolio and blog.',
+  ogImage,
+} = Astro.props;
+
+const siteTitle = title === 'Home' ? 'Sigurd — Lektor & Tinkerer' : `${title} — Sigurd`;
+---
+
+<!doctype html>
+<!--
+  Hard-coded dark class + inline background so the page is NEVER white
+  even for a single frame before JS runs.
+-->
+<html lang="en" class="dark" style="background-color:#0f172a;color:#e2e8f0;">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:title"       content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type"        content="website" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{siteTitle}</title>
+
+    <!--
+      Theme initialisation — runs synchronously before first paint (no FOUC).
+      Dark is the unconditional default; only overridden by an explicit
+      stored 'light' preference from the toggle.
+    -->
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem('theme');
+        // Default = dark always. Switch to light only if user explicitly chose it.
+        const useDark = stored !== 'light';
+        document.documentElement.classList.toggle('dark', useDark);
+        // Keep the inline style in sync so there's zero white flash
+        document.documentElement.style.backgroundColor = useDark ? '#0f172a' : '#f8fafc';
+        document.documentElement.style.color           = useDark ? '#e2e8f0' : '#0f172a';
+      })();
+    </script>
+  </head>
+
+  <body class="bg-fjord text-fjord min-h-screen flex flex-col antialiased">
+    <Nav />
+
+    <main class="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>

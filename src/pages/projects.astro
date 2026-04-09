@@ -1,0 +1,188 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ProjectCard from '@components/ProjectCard.astro';
+
+// ── Project data ────────────────────────────────────────────────────────────
+const projects = [
+  {
+    title:       'LitTrack Pro',
+    hook:        'A reading tracker I built because no existing tool fit how I run literature in my classroom — so I made my own.',
+    description: `LitTrack Pro is a tool I built to track reading and create some hype around books in my classes. It works as a motivator for students while also being a practical tool for me as a teacher to manage literature and assignments. I couldn't find any existing solution that really fit what I needed, so I made my own. It's built so it can easily be expanded and used by other teachers or schools if anyone is interested. Currently in active use with my own students — behind closed doors while I keep refining it.`,
+    features:    [
+      'Track student reading progress across books and class assignments',
+      'Manage literature lists and create assignments as a teacher',
+      'Motivates students with a visible progress system and clean interface',
+    ],
+    tags:    ['Python', 'Django', 'Tailwind', 'daisyUI', 'Render'],
+    href:    'https://littrack-pro.onrender.com/',
+    github:  undefined,
+    status:  'wip' as const,
+    variant: 'littrack',
+    learned: 'Building LitTrack forced me to think seriously about multi-user data structures and how to balance a teacher-facing admin with a student-facing UI that is actually engaging. Deploying to Render with a live database also taught me a lot about environment configuration and production readiness.',
+  },
+  {
+    title:       'Lovund Utleie',
+    hook:        'A self-serve rental shop for outdoor gear on Lovund — browse, pay with Stripe, and pick up straight from the shed.',
+    description: `Lovundutleie is a self-serve rental shop I built for an outdoor gear business on Lovund. Customers browse kayaks, SUP boards, e-scooters, bikes and more, add items to a basket, and pay securely with Stripe — then just pick everything up from the physical shed. No booking system, no back-and-forth. The goal was a clean, no-fuss site that gets out of the way and lets the transaction happen.`,
+    features:    [
+      'Browse kayaks, SUP boards, e-scooters, bikes and more in one shop',
+      'Add items to a basket and pay securely via Stripe',
+      'Self-serve pickup straight from the gear shed — no staff needed',
+    ],
+    tags:    ['TypeScript', 'Node.js', 'Tailwind', 'daisyUI', 'Stripe', 'Render'],
+    href:    'https://lovundutleie.com/',
+    github:  undefined,
+    status:  'live' as const,
+    variant: 'lovund',
+    learned: 'Integrating Stripe end-to-end — from building checkout sessions to handling webhooks reliably — was the most instructive part. Building for a real end user also meant far more focus on error states and edge cases than I would have bothered with otherwise.',
+  },
+  // ── Add future projects below ────────────────────────────────────────────
+  // {
+  //   title:       'My Next Project',
+  //   hook:        'One-liner hook about the project.',
+  //   description: 'Longer description for the modal.',
+  //   features:    ['Feature one', 'Feature two', 'Feature three'],
+  //   tags:        ['Tag1', 'Tag2'],
+  //   href:        'https://example.com',
+  //   github:      'https://github.com/you/project',
+  //   status:      'wip',
+  //   variant:     'default',
+  //   learned:     'What I learned.',
+  // },
+];
+
+// Extract all unique tags for the filter bar
+const allTags = ['All', ...new Set(projects.flatMap(p => p.tags))];
+---
+
+<BaseLayout
+  title="Projects"
+  description="Things I have built — small projects, side experiments, and the occasional useful tool."
+>
+
+  <!-- Page header -->
+  <div class="mb-10">
+    <h1 class="text-4xl font-bold mb-3" style="color: var(--color-text)">Projects</h1>
+    <p class="text-lg max-w-xl" style="color: var(--color-muted)">
+      Small tools and projects I've built for myself or because something was bothering me at the time.
+    </p>
+  </div>
+
+  <!-- ── Filter bar ────────────────────────────────────────────────────── -->
+  <div
+    class="flex flex-wrap gap-2 mb-10"
+    id="filter-bar"
+    role="group"
+    aria-label="Filter projects by tag"
+  >
+    {allTags.map((tag, i) => (
+      <button
+        data-filter={tag}
+        class={`
+          filter-btn text-sm px-3 py-1.5 rounded-lg border transition-all duration-150 font-medium
+          ${i === 0
+            ? 'border-[var(--color-accent)] text-[var(--color-accent)] bg-[var(--color-card)]'
+            : 'border-[var(--color-border)] text-muted hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]'
+          }
+        `}
+        aria-pressed={i === 0 ? 'true' : 'false'}
+      >
+        {tag}
+      </button>
+    ))}
+  </div>
+
+  <!-- ── Project grid ──────────────────────────────────────────────────── -->
+  <div id="project-grid" class="grid sm:grid-cols-2 gap-6">
+    {projects.map(project => (
+      <div
+        class="project-item"
+        data-tags={JSON.stringify(project.tags)}
+      >
+        <ProjectCard
+          title={project.title}
+          hook={project.hook}
+          description={project.description}
+          features={project.features}
+          tags={project.tags}
+          href={project.href}
+          github={project.github}
+          status={project.status}
+          variant={project.variant}
+          learned={project.learned}
+        />
+      </div>
+    ))}
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty-state" class="hidden text-center py-20">
+    <p class="text-muted">No projects match that filter.</p>
+  </div>
+
+</BaseLayout>
+
+<script>
+  // ── Filter ──────────────────────────────────────────────────────────────
+  const buttons  = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
+  const items    = document.querySelectorAll<HTMLElement>('.project-item');
+  const emptyMsg = document.getElementById('empty-state')!;
+
+  function filterProjects(activeTag: string) {
+    let visible = 0;
+    items.forEach(item => {
+      const tags: string[] = JSON.parse(item.dataset.tags ?? '[]');
+      const show = activeTag === 'All' || tags.includes(activeTag);
+      item.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    emptyMsg.classList.toggle('hidden', visible > 0);
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => {
+        b.classList.remove('border-[var(--color-accent)]', 'text-[var(--color-accent)]', 'bg-[var(--color-card)]');
+        b.classList.add('border-[var(--color-border)]', 'text-muted');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('border-[var(--color-accent)]', 'text-[var(--color-accent)]', 'bg-[var(--color-card)]');
+      btn.classList.remove('border-[var(--color-border)]', 'text-muted');
+      btn.setAttribute('aria-pressed', 'true');
+      filterProjects(btn.dataset.filter ?? 'All');
+    });
+  });
+
+  // ── Modals ──────────────────────────────────────────────────────────────
+  document.addEventListener('click', e => {
+    const target = e.target as HTMLElement;
+
+    // Open modal
+    const openBtn = target.closest<HTMLElement>('[data-modal-target]');
+    if (openBtn) {
+      const dialog = document.getElementById(openBtn.dataset.modalTarget!) as HTMLDialogElement | null;
+      dialog?.showModal();
+      return;
+    }
+
+    // Close modal via close button
+    const closeBtn = target.closest<HTMLElement>('[data-modal-close]');
+    if (closeBtn) {
+      const dialog = document.getElementById(closeBtn.dataset.modalClose!) as HTMLDialogElement | null;
+      dialog?.close();
+    }
+  });
+
+  // Close on backdrop click (click outside dialog box)
+  document.querySelectorAll('dialog').forEach(dialog => {
+    dialog.addEventListener('click', e => {
+      const rect = dialog.getBoundingClientRect();
+      const outside =
+        e.clientX < rect.left  || e.clientX > rect.right ||
+        e.clientY < rect.top   || e.clientY > rect.bottom;
+      if (outside) dialog.close();
+    });
+  });
+
+  // Close on Escape is handled natively by <dialog>
+</script>

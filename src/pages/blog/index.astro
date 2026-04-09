@@ -1,0 +1,115 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import BlogCard from '@components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+
+// Fetch all non-draft posts, sorted newest first
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const posts = allPosts.sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+// Collect unique categories for the filter
+const categories = ['All', ...new Set(posts.map(p => p.data.category))];
+---
+
+<BaseLayout
+  title="Blog"
+  description="Notes, observations, and the occasional longer thought."
+>
+
+  <!-- Page header -->
+  <div class="mb-10">
+    <h1 class="text-4xl font-bold mb-3" style="color: var(--color-text)">Blog</h1>
+    <p class="text-lg max-w-xl" style="color: var(--color-muted)">
+      <!--
+        TODO: One-liner about the blog. Keep it low-key.
+        Example: "Notes, observations, and the occasional longer thought.
+        Not a personal brand strategy."
+      -->
+      Notes and the occasional longer thought. Not a personal brand strategy.
+    </p>
+  </div>
+
+  <!-- ── Category filter ───────────────────────────────────────────────── -->
+  <div
+    class="flex flex-wrap gap-2 mb-10"
+    role="group"
+    aria-label="Filter posts by category"
+  >
+    {categories.map((cat, i) => (
+      <button
+        data-category={cat}
+        class={`
+          cat-btn text-sm px-3 py-1.5 rounded-lg border transition-all duration-150 font-medium
+          ${i === 0
+            ? 'border-[var(--color-accent)] text-[var(--color-accent)] bg-[var(--color-card)]'
+            : 'border-[var(--color-border)] text-muted hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]'
+          }
+        `}
+        aria-pressed={i === 0 ? 'true' : 'false'}
+      >
+        {cat}
+      </button>
+    ))}
+  </div>
+
+  <!-- ── Post grid ─────────────────────────────────────────────────────── -->
+  {posts.length === 0 ? (
+    <div class="text-center py-24">
+      <p class="text-2xl mb-2" aria-hidden="true">📖</p>
+      <p class="text-muted">No posts yet. Coming eventually.</p>
+    </div>
+  ) : (
+    <div id="post-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {posts.map(post => (
+        <div class="post-item" data-category={post.data.category}>
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            slug={post.slug}
+            category={post.data.category}
+            tags={post.data.tags}
+          />
+        </div>
+      ))}
+    </div>
+  )}
+
+  <!-- Empty filter state -->
+  <div id="empty-state" class="hidden text-center py-20">
+    <p class="text-muted">Nothing in that category yet.</p>
+  </div>
+
+</BaseLayout>
+
+<script>
+  const btns     = document.querySelectorAll<HTMLButtonElement>('.cat-btn');
+  const items    = document.querySelectorAll<HTMLElement>('.post-item');
+  const empty    = document.getElementById('empty-state')!;
+
+  function filterPosts(cat: string) {
+    let count = 0;
+    items.forEach(item => {
+      const show = cat === 'All' || item.dataset.category === cat;
+      item.style.display = show ? '' : 'none';
+      if (show) count++;
+    });
+    empty.classList.toggle('hidden', count > 0);
+  }
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => {
+        b.classList.remove('border-[var(--color-accent)]', 'text-[var(--color-accent)]', 'bg-[var(--color-card)]');
+        b.classList.add('border-[var(--color-border)]', 'text-muted');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('border-[var(--color-accent)]', 'text-[var(--color-accent)]', 'bg-[var(--color-card)]');
+      btn.classList.remove('border-[var(--color-border)]', 'text-muted');
+      btn.setAttribute('aria-pressed', 'true');
+      filterPosts(btn.dataset.category ?? 'All');
+    });
+  });
+</script>

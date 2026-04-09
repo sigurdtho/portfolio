@@ -1,0 +1,106 @@
+/* ── Google Fonts: Inter — must be before @tailwind directives ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── Tailwind base layers ──────────────────────────────────────── */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base resets / theming ────────────────────────────────────── */
+@layer base {
+  /*
+    Fjord Night — dark is the default at :root level.
+    Light mode is only activated when html.dark is absent (user toggled it off).
+  */
+  :root,
+  html.dark {
+    --color-bg:        #0f172a;   /* slate-950 */
+    --color-card:      #1e2937;   /* slate-800 */
+    --color-text:      #e2e8f0;   /* slate-200 */
+    --color-accent:    #14b8a6;   /* teal-500  */
+    --color-highlight: #4ade80;   /* emerald-400 */
+    --color-muted:     #64748b;   /* slate-500 */
+    --color-border:    #334155;   /* slate-700 */
+  }
+
+  /* Light mode — only when .dark class is explicitly removed */
+  html:not(.dark) {
+    --color-bg:        #f8fafc;
+    --color-card:      #ffffff;
+    --color-text:      #0f172a;
+    --color-accent:    #0d9488;
+    --color-highlight: #16a34a;
+    --color-muted:     #64748b;
+    --color-border:    #e2e8f0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  /* Smooth transitions on theme-sensitive elements */
+  *, *::before, *::after {
+    transition-property: background-color, border-color, color;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+  }
+
+  /* Respect motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition: none !important;
+    }
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Focus ring — teal accent */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Prose link styles within markdown/blog */
+  .prose a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose a:hover {
+    color: var(--color-highlight);
+  }
+}
+
+/* ── Utility classes using CSS variables ──────────────────────── */
+@layer utilities {
+  .bg-fjord      { background-color: var(--color-bg); }
+  .bg-fjord-card { background-color: var(--color-card); }
+  .text-fjord    { color: var(--color-text); }
+  .text-accent   { color: var(--color-accent); }
+  .text-muted    { color: var(--color-muted); }
+  .border-fjord  { border-color: var(--color-border); }
+
+  /* Card surface */
+  .card {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover {
+    box-shadow: 0 0 0 1px var(--color-accent), 0 8px 32px rgba(0,0,0,0.25);
+    transform: translateY(-2px);
+  }
+}

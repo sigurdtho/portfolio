@@ -1,0 +1,636 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const latestPosts = allPosts
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+
+const projects = [
+  {
+    title:       'LitTrack Pro',
+    description: 'A reading tracker I built for my own classroom — to manage literature assignments and give students a visible progress system.',
+    tags:        ['Python', 'Django', 'Tailwind', 'daisyUI', 'Render'],
+    href:        undefined as string | undefined,
+    github:      undefined as string | undefined,
+    status:      'wip' as const,
+    featured:    true,
+  },
+  {
+    title:       'Lovund Utleie',
+    description: 'A self-serve rental shop for outdoor gear on Lovund. Browse kayaks, SUPs, e-scooters and bikes, pay with Stripe, pick up from the shed.',
+    tags:        ['TypeScript', 'Node.js', 'Tailwind', 'daisyUI', 'Stripe', 'Render'],
+    href:        undefined as string | undefined,
+    github:      undefined as string | undefined,
+    status:      'live' as const,
+    featured:    false,
+  },
+];
+
+const statusLabel: Record<string, string> = { live: 'Live', wip: 'In progress', archived: 'Archived' };
+const statusColor: Record<string, string> = {
+  live:     'text-[#4ade80] border-[#4ade80]',
+  wip:      'text-[#14b8a6] border-[#14b8a6]',
+  archived: 'text-[#64748b] border-[#64748b]',
+};
+---
+
+<BaseLayout
+  title="Home"
+  description="Lektor, occasional tinkerer, AI enthusiast. This is where I put things."
+>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     HERO — two-column, generous breathing room
+     ═══════════════════════════════════════════════════════════════════════ -->
+<section class="relative flex items-center pt-20 pb-12">
+
+  <!-- Ambient background layers — overflow-hidden here, NOT on the section,
+       so the paint boundary doesn't create a visible border around the hero -->
+  <div aria-hidden="true" class="absolute inset-0 pointer-events-none">
+    <!-- Primary teal orb, top-left — visible in both modes, very subtle in light -->
+    <div class="hero-orb-teal absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-[0.05] blur-[120px]"
+         style="background: radial-gradient(circle, #14b8a6 0%, transparent 65%);"></div>
+    <!-- Secondary emerald orb — dark mode only, hidden in light via CSS -->
+    <div class="hero-orb-emerald absolute -bottom-32 -right-32 w-[480px] h-[480px] rounded-full opacity-[0.05] blur-[80px]"
+         style="background: radial-gradient(circle, #4ade80 0%, transparent 65%);"></div>
+  </div>
+
+  <div class="relative z-10 w-full grid lg:grid-cols-[1fr_420px] gap-12 xl:gap-20 items-center">
+
+    <!-- ── Left: text content ─────────────────────────────────────── -->
+    <div>
+      <!-- Eyebrow row — on mobile, avatar sits to the right of the eyebrow -->
+      <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-3">
+          <span class="block w-8 h-px" style="background: var(--color-accent);"></span>
+          <p class="text-xs font-medium uppercase tracking-[0.2em]" style="color: var(--color-accent)">
+            Lovund, Norway
+          </p>
+        </div>
+        <!-- Mobile-only inline avatar — desktop has the full orbital column -->
+        <div class="lg:hidden flex-shrink-0">
+          <div class="avatar-glow-xs">
+            <img
+              src="/avatar.png"
+              alt="Sigurd"
+              width="68"
+              height="68"
+              class="avatar-img-xs"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Headline — kept exactly as-is -->
+      <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-8"
+          style="color: var(--color-text)">
+        I&nbsp;teach.<br />
+        I&nbsp;read.<br />
+        I&nbsp;tinker&nbsp;a&nbsp;bit.
+      </h1>
+
+      <!-- Sub-line -->
+      <p class="text-lg sm:text-xl leading-relaxed mb-12 max-w-lg" style="color: var(--color-muted)">
+        Teacher at junior high on Lovund. Master's in informatics. Used to work as a developer and spent a couple of years researching blockchains and game economies in a crypto startup, before becoming a teacher — which feels just right. Outside of work, I read a lot and tinker with AI.
+      </p>
+
+      <!-- CTA row -->
+      <div class="flex flex-wrap gap-4 items-center">
+        <a
+          href="/projects"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-sm transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5 shadow-lg"
+          style="background: var(--color-accent); color: #0f172a; box-shadow: 0 0 28px rgba(20,184,166,0.25);"
+        >
+          See what I have built
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
+        <a
+          href="/about"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-sm border transition-all duration-200 hover:-translate-y-0.5"
+          style="border-color: var(--color-border); color: var(--color-text);"
+        >
+          About me
+        </a>
+
+        <!-- Scroll indicator -->
+        <span class="hidden sm:flex items-center gap-2 ml-auto text-xs" style="color: var(--color-muted)">
+          <svg class="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+          scroll
+        </span>
+      </div>
+    </div>
+
+    <!-- ── Right: avatar + animated orbital rings ───────────────────── -->
+    <div
+      class="hidden lg:flex items-center justify-center select-none"
+      aria-label="Profile illustration with orbital decoration"
+    >
+      <div class="relative w-[380px] h-[380px]">
+
+        <!--
+          SVG layer — split into three groups:
+          1. ring-outer  → slowest spin (60 s / rev)
+          2. ring-mid    → medium spin  (45 s / rev, opposite direction)
+          3. ring-inner  → fastest spin (30 s / rev)
+          4. static      → dots, labels, star-field — never rotate
+        -->
+        <svg
+          class="absolute inset-0 w-full h-full"
+          viewBox="0 0 380 380"
+          overflow="visible"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- ① Outer dashed orbit — spins slowly clockwise -->
+          <g class="ring-outer">
+            <circle cx="190" cy="190" r="174"
+              stroke="#14b8a6" stroke-width="1"
+              stroke-dasharray="6 10" opacity="0.20"/>
+          </g>
+
+          <!-- ② Mid solid ring — spins slowly counter-clockwise -->
+          <g class="ring-mid">
+            <circle cx="190" cy="190" r="130"
+              stroke="#14b8a6" stroke-width="1" opacity="0.14"/>
+            <!-- A small travelling dot on this ring for visual interest -->
+            <circle cx="190" cy="60" r="3" fill="#14b8a6" opacity="0.50"/>
+          </g>
+
+          <!-- ③ Inner dashed ring — spins a little faster clockwise -->
+          <g class="ring-inner">
+            <circle cx="190" cy="190" r="88"
+              stroke="#14b8a6" stroke-width="1"
+              stroke-dasharray="3 7" opacity="0.16"/>
+            <!-- Travelling dot on inner ring -->
+            <circle cx="278" cy="190" r="2.5" fill="#14b8a6" opacity="0.45"/>
+          </g>
+
+          <!-- ④ Static layer — never rotates -->
+          <!-- Cardinal dots (fixed compass positions) -->
+          <circle cx="190" cy="16"  r="3.5" fill="#14b8a6" opacity="0.40"/>
+          <circle cx="364" cy="190" r="3.5" fill="#14b8a6" opacity="0.40"/>
+          <circle cx="190" cy="364" r="3.5" fill="#14b8a6" opacity="0.30"/>
+          <circle cx="16"  cy="190" r="3.5" fill="#14b8a6" opacity="0.25"/>
+
+          <!-- Star-field dots -->
+          <circle cx="310" cy="52"  r="1.5" fill="#e2e8f0" opacity="0.18"/>
+          <circle cx="55"  cy="80"  r="1"   fill="#e2e8f0" opacity="0.13"/>
+          <circle cx="340" cy="300" r="1.5" fill="#e2e8f0" opacity="0.13"/>
+          <circle cx="40"  cy="310" r="1"   fill="#e2e8f0" opacity="0.10"/>
+          <circle cx="320" cy="160" r="1"   fill="#14b8a6" opacity="0.18"/>
+          <circle cx="70"  cy="130" r="1.5" fill="#14b8a6" opacity="0.15"/>
+          <circle cx="350" cy="120" r="1"   fill="#e2e8f0" opacity="0.10"/>
+          <circle cx="30"  cy="230" r="1"   fill="#14b8a6" opacity="0.12"/>
+        </svg>
+
+        <!-- Avatar — centred absolutely on top of the SVG rings -->
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="avatar-glow">
+            <img
+              src="/avatar.png"
+              alt="Sigurd — profile illustration"
+              width="196"
+              height="196"
+              class="avatar-img"
+            />
+          </div>
+        </div>
+
+        <!-- Compass micro-labels — outside the SVG, positioned on the container -->
+        <!-- All four labels sit 16px outside their container edge — same breathing room from their dot -->
+        <!-- Section has no overflow-hidden, so these render without clipping -->
+        <span class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 text-[9px] font-mono tracking-widest opacity-[0.22]"
+              style="color: var(--color-accent)">N</span>
+        <span class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-4 text-[9px] font-mono tracking-widest opacity-[0.22]"
+              style="color: var(--color-accent)">S</span>
+        <span class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 text-[9px] font-mono tracking-widest opacity-[0.22]"
+              style="color: var(--color-accent)">W</span>
+        <span class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 text-[9px] font-mono tracking-widest opacity-[0.22]"
+              style="color: var(--color-accent)">E</span>
+      </div>
+    </div>
+
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     BENTO PROJECT GRID
+     ═══════════════════════════════════════════════════════════════════════ -->
+<section class="py-20">
+  <div class="flex items-baseline justify-between mb-10">
+    <h2 class="text-2xl font-semibold" style="color: var(--color-text)">Some things I have built</h2>
+    <a href="/projects" class="text-sm transition-colors hover:text-[var(--color-highlight)]"
+       style="color: var(--color-accent)">All projects →</a>
+  </div>
+
+  <!--
+    Bento grid:
+      Desktop  → LitTrack (col 1-8 wide, shorter) | Lovundutleie (col 9-12, tall, 2 rows)
+                 "View all" micro-card             |
+      Mobile   → stacked
+  -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-[auto_auto] gap-4">
+
+    <!-- ── LitTrack Pro: featured wide card ─────────────────────── -->
+    <article
+      class="bento-card group lg:col-span-8 lg:row-span-1 relative overflow-hidden rounded-2xl p-8 flex flex-col gap-5 cursor-default"
+      style="background: var(--color-card); border: 1px solid var(--color-border);"
+    >
+      <!-- Accent glow on hover -->
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+           style="box-shadow: inset 0 0 0 1px #14b8a6, 0 0 40px rgba(20,184,166,0.08);"></div>
+
+      <!-- Top row: icon + links -->
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-3">
+          <!-- Folder icon -->
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+               style="background: rgba(20,184,166,0.10); border: 1px solid rgba(20,184,166,0.20);">
+            <svg class="w-5 h-5" fill="none" stroke="#14b8a6" viewBox="0 0 24 24" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg leading-tight" style="color: var(--color-text)">LitTrack Pro</h3>
+            <span class="text-xs border rounded-full px-2 py-0.5 text-[#14b8a6] border-[#14b8a6]">In progress</span>
+          </div>
+        </div>
+        <!-- External links placeholder -->
+        <div class="flex gap-2 text-muted opacity-0 group-hover:opacity-100 transition-opacity">
+          <!-- TODO: Uncomment and fill in when you have URLs
+          <a href="..." class="hover:text-accent transition-colors" ...>...</a>
+          -->
+        </div>
+      </div>
+
+      <!-- Description -->
+      <p class="text-sm leading-relaxed flex-1" style="color: var(--color-muted)">
+        A reading tracker I built for my own classroom — to manage literature assignments and give students a visible progress system. No existing tool fit, so I made my own.
+      </p>
+
+      <!-- Tags -->
+      <div class="flex flex-wrap gap-2">
+        {['Python', 'Django', 'Tailwind', 'daisyUI', 'Render'].map(tag => (
+          <span class="text-xs px-2.5 py-1 rounded-md font-mono"
+                style="background: var(--color-bg); color: var(--color-accent); border: 1px solid var(--color-border)">
+            {tag}
+          </span>
+        ))}
+      </div>
+    </article>
+
+    <!-- ── Lovundutleie: taller card (spans 2 rows) ──────────────── -->
+    <article
+      class="bento-card group lg:col-span-4 lg:row-span-2 relative overflow-hidden rounded-2xl p-8 flex flex-col gap-5 cursor-default"
+      style="background: var(--color-card); border: 1px solid var(--color-border); min-height: 300px;"
+    >
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+           style="box-shadow: inset 0 0 0 1px #4ade80, 0 0 40px rgba(74,222,128,0.06);"></div>
+
+      <!-- Decorative vertical accent bar -->
+      <div class="absolute left-0 top-8 bottom-8 w-[2px] rounded-full opacity-30"
+           style="background: linear-gradient(to bottom, #4ade80, transparent);"></div>
+
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+             style="background: rgba(74,222,128,0.10); border: 1px solid rgba(74,222,128,0.20);">
+          <svg class="w-5 h-5" fill="none" stroke="#4ade80" viewBox="0 0 24 24" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-semibold text-lg leading-tight" style="color: var(--color-text)">Lovund Utleie</h3>
+          <span class="text-xs border rounded-full px-2 py-0.5 text-[#4ade80] border-[#4ade80]">Live</span>
+        </div>
+      </div>
+
+      <p class="text-sm leading-relaxed flex-1" style="color: var(--color-muted)">
+        A self-serve rental shop for outdoor gear on Lovund. Browse kayaks, SUPs, e-scooters and bikes, pay with Stripe, pick up from the shed.
+      </p>
+
+      <!-- Tags -->
+      <div class="flex flex-wrap gap-2 mt-auto">
+        {['TypeScript', 'Node.js', 'Tailwind', 'daisyUI', 'Stripe', 'Render'].map(tag => (
+          <span class="text-xs px-2.5 py-1 rounded-md font-mono"
+                style="background: var(--color-bg); color: var(--color-highlight); border: 1px solid var(--color-border)">
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      <!-- Live indicator -->
+      <div class="flex items-center gap-2 pt-4 border-t" style="border-color: var(--color-border)">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-50"
+                style="background: #4ade80;"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2" style="background: #4ade80;"></span>
+        </span>
+        <span class="text-xs" style="color: var(--color-muted)">Live in production</span>
+      </div>
+    </article>
+
+    <!-- ── "View all" micro-card (fills second row under LitTrack) ── -->
+    <a
+      href="/projects"
+      class="bento-card group lg:col-span-8 lg:row-span-1 relative rounded-2xl p-6 flex items-center justify-between overflow-hidden"
+      style="background: var(--color-card); border: 1px solid var(--color-border);"
+    >
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+           style="background: linear-gradient(90deg, rgba(20,184,166,0.04) 0%, transparent 100%);"></div>
+      <div>
+        <p class="text-sm font-medium" style="color: var(--color-text)">More projects</p>
+        <p class="text-xs mt-0.5" style="color: var(--color-muted)">The full list, with what I learned building each one</p>
+      </div>
+      <svg class="w-6 h-6 flex-shrink-0 group-hover:translate-x-1 transition-transform"
+           fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"
+           style="color: var(--color-accent)">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     BLOG — staggered masonry columns
+     ═══════════════════════════════════════════════════════════════════════ -->
+{latestPosts.length > 0 && (
+  <section class="py-20 border-t" style="border-color: var(--color-border)">
+    <div class="flex items-baseline justify-between mb-10">
+      <h2 class="text-2xl font-semibold" style="color: var(--color-text)">From the blog</h2>
+      <a href="/blog" class="text-sm transition-colors hover:text-[var(--color-highlight)]"
+         style="color: var(--color-accent)">All posts →</a>
+    </div>
+
+    <!--
+      CSS columns = true masonry. Cards at different positions get naturally
+      staggered by the browser column algorithm. Extra top padding on certain
+      columns adds deliberate vertical offset.
+    -->
+    <div class="blog-masonry">
+      {latestPosts.map((post, i) => {
+        // Stagger offsets: 0 → 0, 1 → 40px, 2 → 20px
+        const offsets = ['0px', '40px', '20px'];
+        const offset = offsets[i % 3];
+        return (
+          <article
+            class="blog-card-stagger group"
+            style={`margin-top: ${offset};`}
+          >
+            <!-- Category + date -->
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <span class="text-[10px] font-medium uppercase tracking-[0.18em]"
+                    style="color: var(--color-accent)">{post.data.category}</span>
+              <time datetime={post.data.pubDate.toISOString()}
+                    class="text-xs" style="color: var(--color-muted)">
+                {post.data.pubDate.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </time>
+            </div>
+
+            <!-- Title -->
+            <h3 class="font-semibold leading-snug mb-3 group-hover:text-[var(--color-accent)] transition-colors"
+                style={`color: var(--color-text); font-size: ${i === 0 ? '1.15rem' : '1rem'};`}>
+              <a href={`/blog/${post.slug}`} class="stretched-link">{post.data.title}</a>
+            </h3>
+
+            <!-- Description — first card shows more -->
+            <p class="text-sm leading-relaxed mb-4"
+               style={`color: var(--color-muted); -webkit-line-clamp: ${i === 0 ? 4 : 3}; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden;`}>
+              {post.data.description}
+            </p>
+
+            <!-- Tags -->
+            {post.data.tags.length > 0 && (
+              <div class="flex flex-wrap gap-1.5 mb-4">
+                {post.data.tags.slice(0, 3).map(tag => (
+                  <span class="text-[11px] px-2 py-0.5 rounded font-mono"
+                        style="background: var(--color-bg); color: var(--color-muted)">#{tag}</span>
+                ))}
+              </div>
+            )}
+
+            <a href={`/blog/${post.slug}`}
+               class="inline-flex items-center gap-1 text-xs font-medium transition-colors hover:text-[var(--color-highlight)]"
+               style="color: var(--color-accent)">
+              Read more
+              <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"
+                   fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+)}
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     QUICK BIO STRIP
+     ═══════════════════════════════════════════════════════════════════════ -->
+<section class="py-20 border-t" style="border-color: var(--color-border)">
+  <div class="grid lg:grid-cols-[1fr_auto] gap-10 items-start">
+    <div class="max-w-2xl">
+      <h2 class="text-2xl font-semibold mb-4" style="color: var(--color-text)">In short</h2>
+      <p class="text-base leading-relaxed mb-3" style="color: var(--color-muted)">
+        I teach math, science and English at junior high on Lovund. Master’s in informatics. Had a high-school romteknolog qualification and a detour through development and blockchain research before becoming a teacher — which feels just right.
+      </p>
+      <p class="text-base leading-relaxed mb-6" style="color: var(--color-muted)">
+        Outside of work I read a lot, follow space news, enjoy living on Lovund with my family, and tinker with software (AI makes the tinkering part a lot more fun). I’m also open to small side projects — especially simple web pages for companies or other interesting ideas.
+      </p>
+      <a href="/about" class="text-sm font-medium transition-colors hover:text-[var(--color-highlight)]"
+         style="color: var(--color-accent)">More about me →</a>
+    </div>
+
+    <!-- Mini stat chips -->
+    <div class="flex flex-col gap-3 min-w-[180px]">
+      {[
+        { label: 'Role',      value: 'Teacher' },
+        { label: 'Based in',  value: 'Lovund, Norway' },
+        { label: 'Interests', value: 'AI · Space · Books' },
+      ].map(({ label, value }) => (
+        <div class="rounded-xl px-4 py-3" style="background: var(--color-card); border: 1px solid var(--color-border)">
+          <p class="text-[10px] uppercase tracking-widest mb-0.5" style="color: var(--color-muted)">{label}</p>
+          <p class="text-sm font-medium" style="color: var(--color-text)">{value}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+</BaseLayout>
+
+<style>
+  /* ══════════════════════════════════════════════════════════════════
+     ORBITAL RING ANIMATIONS
+     Pure CSS — no JavaScript. Each ring group rotates around its own
+     centre using transform-box + transform-origin: center so the SVG
+     coordinate system doesn't interfere.
+     ══════════════════════════════════════════════════════════════════ */
+
+  @keyframes orbit-cw {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  @keyframes orbit-ccw {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(-360deg); }
+  }
+
+  /* Outer dashed ring — one full revolution every 60 s, clockwise */
+  .ring-outer {
+    transform-box:    fill-box;
+    transform-origin: center;
+    animation: orbit-cw 60s linear infinite;
+  }
+
+  /* Mid solid ring + its dot — 45 s, counter-clockwise */
+  .ring-mid {
+    transform-box:    fill-box;
+    transform-origin: center;
+    animation: orbit-ccw 45s linear infinite;
+  }
+
+  /* Inner dashed ring + its dot — 30 s, clockwise */
+  .ring-inner {
+    transform-box:    fill-box;
+    transform-origin: center;
+    animation: orbit-cw 30s linear infinite;
+  }
+
+  /* Respect reduced-motion preference — no animation */
+  @media (prefers-reduced-motion: reduce) {
+    .ring-outer, .ring-mid, .ring-inner {
+      animation: none;
+    }
+  }
+
+  /* ══════════════════════════════════════════════════════════════════
+     AVATAR — circular crop + teal glow border
+     ══════════════════════════════════════════════════════════════════ */
+
+  .avatar-glow {
+    display:       inline-flex;
+    border-radius: 50%;
+    padding:       3px;                                   /* ring gap */
+    /* Pure teal gradient — no green tint in either mode */
+    background:    linear-gradient(135deg, #0d9488, #14b8a6 50%, #0d9488);
+    box-shadow:
+      0 0 0 1px rgba(20, 184, 166, 0.40),
+      0 0 36px rgba(20, 184, 166, 0.38),
+      0 0 72px rgba(20, 184, 166, 0.14);
+    animation: avatar-float 6s ease-in-out infinite;
+  }
+
+  /* Desktop avatar — 196px, full figure visible */
+  .avatar-img {
+    display:      block;
+    width:        194px;
+    height:       194px;
+    border-radius: 50%;
+    object-fit:   contain;   /* show full figure, no cropping */
+    background:   #ffffff;   /* match avatar's own white bg */
+  }
+
+  /* Inline mobile avatar (eyebrow row) — 68px */
+  .avatar-img-xs {
+    width:        66px;
+    height:       66px;
+    border-radius: 50%;
+    object-fit:   contain;
+    background:   #ffffff;
+  }
+
+  /* Smaller glow + no float for the inline mobile version */
+  .avatar-glow-xs {
+    display:       inline-flex;
+    border-radius: 50%;
+    padding:       2px;
+    background:    linear-gradient(135deg, #0d9488, #14b8a6 50%, #0d9488);
+    box-shadow:
+      0 0 0 1px rgba(20, 184, 166, 0.35),
+      0 0 14px rgba(20, 184, 166, 0.30);
+    /* no float animation on inline tiny avatar */
+  }
+
+  /* Gentle vertical float — calm, not distracting */
+  @keyframes avatar-float {
+    0%, 100% { transform: translateY(0px);   }
+    50%       { transform: translateY(-8px);  }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .avatar-glow { animation: none; }
+  }
+
+  /* ── Bento card hover lift ────────────────────────────────────────── */
+  .bento-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .bento-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+  }
+
+  /* ── Blog masonry container ───────────────────────────────────────── */
+  .blog-masonry {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  @media (min-width: 640px) {
+    .blog-masonry {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .blog-masonry {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ── Blog card ────────────────────────────────────────────────────── */
+  .blog-card-stagger {
+    position: relative;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .blog-card-stagger:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    border-color: var(--color-accent);
+  }
+  .stretched-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /* Reset margin-top on mobile (stagger only kicks in on ≥lg) */
+  @media (max-width: 1023px) {
+    .blog-card-stagger {
+      margin-top: 0 !important;
+    }
+  }
+
+  /* ── Light-mode ambient orb overrides ────────────────────────────── */
+  /* Teal orb: much more subtle in light mode — barely there */
+  html:not(.dark) .hero-orb-teal   { opacity: 0.035 !important; }
+  /* Emerald orb: fully hidden in light mode — no green tint whatsoever */
+  html:not(.dark) .hero-orb-emerald { opacity: 0 !important; display: none; }
+</style>

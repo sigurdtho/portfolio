@@ -1,0 +1,119 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const navLinks = [
+  { href: '/',         label: 'Home'     },
+  { href: '/about',    label: 'About'    },
+  { href: '/projects', label: 'Projects' },
+  { href: '/blog',     label: 'Blog'     },
+  { href: '/contact',  label: 'Contact'  },
+];
+
+const currentPath = new URL(Astro.request.url).pathname;
+
+function isActive(href: string) {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+}
+---
+
+<header
+  id="site-nav"
+  class="
+    sticky top-0 z-50
+    border-b border-[var(--color-border)]
+    backdrop-blur-md
+    transition-all duration-200
+  "
+  style="background-color: color-mix(in srgb, var(--color-bg) 85%, transparent);"
+>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo / wordmark -->
+      <a
+        href="/"
+        class="font-semibold text-lg tracking-tight transition-colors duration-150 hover:text-[var(--color-accent)]"
+        style="color: var(--color-text)"
+      >
+          Sigurd
+      </a>
+
+      <!-- Desktop nav links -->
+      <nav class="hidden sm:flex items-center gap-1" aria-label="Main navigation">
+        {navLinks.map(link => (
+          <a
+            href={link.href}
+            class={`
+              px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150
+              ${isActive(link.href)
+                ? 'text-accent bg-[var(--color-card)]'
+                : 'text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-card)]'
+              }
+            `}
+            aria-current={isActive(link.href) ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Right side: theme toggle + mobile menu trigger -->
+      <div class="flex items-center gap-2">
+        <ThemeToggle />
+
+        <!-- Mobile hamburger -->
+        <button
+          id="mobile-menu-btn"
+          class="sm:hidden inline-flex items-center justify-center w-9 h-9 rounded-lg text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-card)] transition-colors"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <svg id="ham-open"  class="w-5 h-5"        fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg id="ham-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div
+    id="mobile-menu"
+    class="sm:hidden hidden border-t border-[var(--color-border)] py-2"
+    style="background-color: var(--color-bg)"
+  >
+    <nav class="flex flex-col px-4 gap-1" aria-label="Mobile navigation">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class={`
+            px-3 py-2.5 rounded-md text-sm font-medium transition-colors
+            ${isActive(link.href)
+              ? 'text-accent bg-[var(--color-card)]'
+              : 'text-muted hover:text-[var(--color-text)] hover:bg-[var(--color-card)]'
+            }
+          `}
+          aria-current={isActive(link.href) ? 'page' : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn       = document.getElementById('mobile-menu-btn')!;
+  const menu      = document.getElementById('mobile-menu')!;
+  const hamOpen   = document.getElementById('ham-open')!;
+  const hamClose  = document.getElementById('ham-close')!;
+
+  btn.addEventListener('click', () => {
+    const isOpen = !menu.classList.contains('hidden');
+    menu.classList.toggle('hidden', isOpen);
+    hamOpen.classList.toggle('hidden', !isOpen);
+    hamClose.classList.toggle('hidden', isOpen);
+    btn.setAttribute('aria-expanded', String(!isOpen));
+  });
+</script>

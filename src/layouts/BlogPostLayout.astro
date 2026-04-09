@@ -1,0 +1,132 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title:       string;
+  description: string;
+  pubDate:     Date;
+  updatedDate?: Date;
+  category:    string;
+  tags:        string[];
+  heroImage?:  string;
+  readingTime?: string;
+}
+
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  category,
+  tags,
+  heroImage,
+} = Astro.props;
+
+const formattedDate = pubDate.toLocaleDateString('en-GB', {
+  year:  'numeric',
+  month: 'long',
+  day:   'numeric',
+});
+
+const formattedUpdated = updatedDate?.toLocaleDateString('en-GB', {
+  year:  'numeric',
+  month: 'long',
+  day:   'numeric',
+});
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="max-w-2xl mx-auto">
+
+    <!-- Back link -->
+    <a
+      href="/blog"
+      class="inline-flex items-center gap-2 text-sm text-muted hover:text-accent mb-8 group"
+    >
+      <svg class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      Back to blog
+    </a>
+
+    <!-- Hero image -->
+    {heroImage && (
+      <img
+        src={heroImage}
+        alt={title}
+        class="w-full h-56 object-cover rounded-xl mb-8 border border-fjord"
+      />
+    )}
+
+    <!-- Category badge -->
+    <div class="mb-3">
+      <span class="text-xs font-medium uppercase tracking-widest text-accent border border-current rounded-full px-3 py-1">
+        {category}
+      </span>
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-4" style="color: var(--color-text)">
+      {title}
+    </h1>
+
+    <!-- Description -->
+    <p class="text-lg text-muted mb-6 leading-relaxed">{description}</p>
+
+    <!-- Metadata row -->
+    <div class="flex flex-wrap items-center gap-4 text-sm text-muted border-t border-b border-fjord py-4 mb-10">
+      <time datetime={pubDate.toISOString()}>
+        {formattedDate}
+      </time>
+      {formattedUpdated && (
+        <span class="text-xs">
+          (updated {formattedUpdated})
+        </span>
+      )}
+      {tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 ml-auto">
+          {tags.map(tag => (
+            <span class="text-xs px-2 py-0.5 rounded bg-fjord-card border border-fjord text-muted">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <!-- Markdown content -->
+    <!--
+      prose-slate = sensible slate grays for light mode
+      dark:prose-invert = flip to white/gray for dark mode
+      Additional custom overrides via CSS variables in global.css
+    -->
+    <div class="
+      prose prose-slate dark:prose-invert max-w-none
+      prose-headings:font-semibold prose-headings:scroll-mt-20
+      prose-a:text-teal-500 dark:prose-a:text-teal-400
+      prose-a:no-underline hover:prose-a:underline
+      prose-code:text-teal-500 dark:prose-code:text-teal-400
+      prose-code:before:content-none prose-code:after:content-none
+      prose-code:bg-slate-100 dark:prose-code:bg-slate-800
+      prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+      prose-pre:bg-slate-800 dark:prose-pre:bg-slate-900
+      prose-pre:border prose-pre:border-slate-700
+      prose-blockquote:border-l-teal-500 prose-blockquote:text-slate-500
+      prose-hr:border-slate-200 dark:prose-hr:border-slate-700
+    ">
+      <slot />
+    </div>
+
+    <!-- Footer tags -->
+    {tags.length > 0 && (
+      <div class="mt-12 pt-6 border-t border-fjord flex flex-wrap gap-2">
+        {tags.map(tag => (
+          <span class="text-xs px-3 py-1 rounded-full bg-fjord-card border border-fjord text-muted">
+            #{tag}
+          </span>
+        ))}
+      </div>
+    )}
+
+  </article>
+</BaseLayout>
