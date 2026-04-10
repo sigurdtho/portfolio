@@ -5,37 +5,64 @@ import ProjectCard from '@components/ProjectCard.astro';
 // ── Project data ────────────────────────────────────────────────────────────
 const projects = [
   {
-    title:       'LitTrack Pro',
-    hook:        'A reading tracker I built because no existing tool fit how I run literature in my classroom — so I made my own.',
-    description: `LitTrack Pro is a tool I built to track reading and create some hype around books in my classes. It works as a motivator for students while also being a practical tool for me as a teacher to manage literature and assignments. I couldn't find any existing solution that really fit what I needed, so I made my own. It's built so it can easily be expanded and used by other teachers or schools if anyone is interested. Currently in active use with my own students — behind closed doors while I keep refining it.`,
-    features:    [
-      'Track student reading progress across books and class assignments',
-      'Manage literature lists and create assignments as a teacher',
-      'Motivates students with a visible progress system and clean interface',
-    ],
-    tags:    ['Python', 'Django', 'Tailwind', 'daisyUI', 'Render'],
-    href:    'https://littrack-pro.onrender.com/',
-    github:  undefined,
-    status:  'wip' as const,
-    variant: 'littrack',
-    learned: 'Building LitTrack forced me to think seriously about multi-user data structures and how to balance a teacher-facing admin with a student-facing UI that is actually engaging. Deploying to Render with a live database also taught me a lot about environment configuration and production readiness.',
-  },
+  title: 'LitTrack Pro',
+  hook: 'A reading tracker with live leaderboards and physical bookmarks I designed myself. The kids are now actually choosing to read.',
+  description: `Started as a plain Excel sheet to track how much my students were actually reading (15 min every single day). 
+Turned into a Django app with live leaderboards and real physical bookmarks I designed myself. 
+The kids are now properly hooked — one of the girls even asked me “What have you done to us?!”`,
+  features: [
+    'Live class leaderboard and individual reading progress',
+    'Physical bookmark rewards for hitting page tiers',
+    'Dead-simple way for me to log finished books',
+    'Built to scale — multi-class and multi-school ready',
+  ],
+  tags: ['Python', 'Django', 'Tailwind', 'daisyUI', 'Render'],
+  href: 'https://littrack-pro.onrender.com/',
+  github: undefined,
+  status: 'wip' as const,
+  variant: 'littrack',
+  learned: "Expanding it for multiple schools meant real data-migration pain and the first version wasn’t mobile-friendly at all. I leaned hard on different AI models throughout — Grok-4 for the heavy architecture lifts and Claude for polishing. Deploying a live app on Render with real student data taught me a lot about production readiness.",
+},
   {
-    title:       'Lovund Utleie',
-    hook:        'A self-serve rental shop for outdoor gear on Lovund — browse, pay with Stripe, and pick up straight from the shed.',
-    description: `Lovundutleie is a self-serve rental shop I built for an outdoor gear business on Lovund. Customers browse kayaks, SUP boards, e-scooters, bikes and more, add items to a basket, and pay securely with Stripe — then just pick everything up from the physical shed. No booking system, no back-and-forth. The goal was a clean, no-fuss site that gets out of the way and lets the transaction happen.`,
-    features:    [
-      'Browse kayaks, SUP boards, e-scooters, bikes and more in one shop',
-      'Add items to a basket and pay securely via Stripe',
-      'Self-serve pickup straight from the gear shed — no staff needed',
-    ],
-    tags:    ['TypeScript', 'Node.js', 'Tailwind', 'daisyUI', 'Stripe', 'Render'],
-    href:    'https://lovundutleie.com/',
-    github:  undefined,
-    status:  'live' as const,
-    variant: 'lovund',
-    learned: 'Integrating Stripe end-to-end — from building checkout sessions to handling webhooks reliably — was the most instructive part. Building for a real end user also meant far more focus on error states and edge cases than I would have bothered with otherwise.',
-  },
+  title: 'Lovund Utleie',
+  hook: 'A self-serve gear rental shop on Lovund — grab a kayak or e-scooter from the shed, pay on your phone, and go. No booking, no staff, no hassle.',
+  description: `Lovund Utleie is the self-serve rental shop I built for outdoor gear on Lovund in Nordland. Customers just walk up to the shed at Hamnholmen, take whatever they need (bike, e-scooter, SUP board, kayak, drysuit…), pay quickly on their phone with card, Vipps, Apple Pay or Google Pay, and head off to explore. When they’re done they drop everything back in the shed. No booking system, no back-and-forth emails, no staff needed.
+
+The whole idea was to make it as frictionless as possible — “Kom som du er” (come as you are). Open 24/7 during the season, first-come-first-served, and the site basically gets out of the way so people can just enjoy the island.`,
+  features: [
+    'Browse and rent bikes, e-scooters, SUP boards, kayaks and more — all from one simple shop',
+    'Pay instantly on your phone (card, Vipps, Apple Pay, Google Pay)',
+    "True self-serve: take gear from the shed, return it when you’re done — no staff required",
+    '24/7 access during the season, no reservations needed'
+  ],
+  tags: ['TypeScript', 'Node.js', 'Tailwind', 'daisyUI', 'Stripe', 'Render'],
+  href: 'https://lovundutleie.com/',
+  github: undefined,
+  status: 'live' as const,
+  variant: 'lovund',
+  learned: 'Integrating Stripe end-to-end (checkout sessions, webhooks, payment handling) was the biggest technical challenge and the most useful learning. Building for a real local business also forced me to focus on rock-solid error states, mobile-first design, and keeping the whole flow extremely simple for users who are literally standing outside in the rain.',
+},
+{
+  title: 'Garden App',
+  hook: "A mobile garden tracker I’m vibe-coding because my house is turning into a full-on plantation. First real Flutter app — Android + iOS.",
+  description: `My wife has gone full gardening mode and our house is starting to look like a jungle. My brother-in-law threw out the idea of “just make an app to organize it all” and the lightbulb went off: I can just vibe-code this shit!
+
+So I started building Garden App — my first proper mobile app that will work natively on both Android and iOS with Flutter. Right now it’s still very early and bare-bones, but the goal is a simple, useful tool to keep track of all the plants, planting dates, watering schedules, notes, harvests, the works.
+
+It’s pure vibe-coding so far — optimistic and probably a bit naive, but that’s half the fun.`,
+  features: [
+    'Track plants, planting dates, watering schedules and notes',
+    'Native Android + iOS app built with Flutter',
+    'Simple, clean interface that actually feels good to use in the garden',
+    'Built from day one to grow into something bigger (maybe even income-generating later)'
+  ],
+  tags: ['Flutter', 'Dart', 'Supabase', 'Mobile'],
+  href: undefined,           // change to live demo link when you have one
+  github: undefined,
+  status: 'wip' as const,
+  variant: 'garden',
+  learned: 'I went in super optimistic (“I can just vibe-code this”). Even with AI help, turning a vague idea into a real cross-platform mobile app is a much bigger project than I expected. First time doing proper Flutter/Dart and thinking about mobile-specific stuff like offline support, nice UI on small screens, etc. Good learning though.',
+},
   // ── Add future projects below ────────────────────────────────────────────
   // {
   //   title:       'My Next Project',
@@ -157,7 +184,6 @@ const allTags = ['All', ...new Set(projects.flatMap(p => p.tags))];
   document.addEventListener('click', e => {
     const target = e.target as HTMLElement;
 
-    // Open modal
     const openBtn = target.closest<HTMLElement>('[data-modal-target]');
     if (openBtn) {
       const dialog = document.getElementById(openBtn.dataset.modalTarget!) as HTMLDialogElement | null;
@@ -165,7 +191,6 @@ const allTags = ['All', ...new Set(projects.flatMap(p => p.tags))];
       return;
     }
 
-    // Close modal via close button
     const closeBtn = target.closest<HTMLElement>('[data-modal-close]');
     if (closeBtn) {
       const dialog = document.getElementById(closeBtn.dataset.modalClose!) as HTMLDialogElement | null;
@@ -173,7 +198,7 @@ const allTags = ['All', ...new Set(projects.flatMap(p => p.tags))];
     }
   });
 
-  // Close on backdrop click (click outside dialog box)
+  // Close on backdrop click
   document.querySelectorAll('dialog').forEach(dialog => {
     dialog.addEventListener('click', e => {
       const rect = dialog.getBoundingClientRect();
@@ -183,6 +208,4 @@ const allTags = ['All', ...new Set(projects.flatMap(p => p.tags))];
       if (outside) dialog.close();
     });
   });
-
-  // Close on Escape is handled natively by <dialog>
 </script>
