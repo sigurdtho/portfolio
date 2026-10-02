@@ -4,7 +4,7 @@ description: "A 4.5-minute music video starring Carl & Donut, Jake, Zac and Jaso
 pubDate: 2026-10-02
 category: "Projects"
 tags: ["litrpg", "ai video", "music video", "comfyui", "claude code", "rtx 4090", "open models"]
-draft: true
+draft: false
 heroImage: "/images/litrpg-video/hero.jpg"
 ---
 
